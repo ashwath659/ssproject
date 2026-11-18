@@ -1,0 +1,24 @@
+{
+	"name": "lsforsqlserverconnect",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "DESKTOP-7D8BTPT",
+			"database": "AdventureWorksDW2014",
+			"encrypt": "False",
+			"trustServerCertificate": true,
+			"authenticationType": "SQL",
+			"userName": "ss",
+			"pooling": "False",
+			"multipleActiveResultSets": "False",
+			"commandTimeout": "0",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI1NjdmMWM1ZS1lNjY4LTRiYTYtOTIyMC02YWEwOTZjNjFjM2UiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "irforss",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

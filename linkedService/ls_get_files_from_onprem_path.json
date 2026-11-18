@@ -1,0 +1,18 @@
+{
+	"name": "ls_get_files_from_onprem_path",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "ls_get_files_from_onprem_path",
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "E:\\Sales_by_Year",
+			"userId": "DESKTOP-7D8BTPT\\Lenovo",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJlZGQ3NGNkMS1kNzU0LTRjZmUtYTVkNy1iNjRkMmMzNThjNmMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "irforss",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

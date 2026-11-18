@@ -1,0 +1,17 @@
+{
+	"name": "DEL_LINKEDSERVICE",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "E:\\Sales_by_Year",
+			"userId": "desktop-7d8btpt\\lenovo",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJlOTUzZTE5ZS0yOTVlLTRhZmEtYWY5NS1hMWNjMTExYTBiMWQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "irforss",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

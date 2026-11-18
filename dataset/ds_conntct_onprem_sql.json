@@ -1,0 +1,18 @@
+{
+	"name": "ds_conntct_onprem_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_for_onprem_sql_connect",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"param_tbname": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

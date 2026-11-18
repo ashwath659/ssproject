@@ -1,0 +1,18 @@
+{
+	"name": "ls_get_dimensiondata_from_onprem",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "ls_get_dimensiondata_from_onprem \nData is located in D Drive. D:\\Project\\Dimension",
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": " D:\\Project\\Dimension",
+			"userId": "DESKTOP-7D8BTPT\\Lenovo",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIxMDIyYjAyNi1jNDIyLTRlY2UtYmNmYy0xYjIyMjJjNjI0MzciLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "irforss",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

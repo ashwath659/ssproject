@@ -1,0 +1,28 @@
+{
+	"name": "ds_az_del_sales_files",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_az_cont",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ds_p_az_del_sales_f_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().ds_p_az_del_sales_f_name",
+					"type": "Expression"
+				},
+				"folderPath": "sales",
+				"fileSystem": "bronze"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

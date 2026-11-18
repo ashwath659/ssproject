@@ -1,0 +1,15 @@
+{
+	"name": "df2920262",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "southindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "5c2e0fcc-76f7-457c-9e9b-a4a060e6d672",
+		"tenantId": "7ac35177-8420-4526-a109-be473769b675"
+	}
+}

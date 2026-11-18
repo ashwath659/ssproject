@@ -1,0 +1,578 @@
+{
+	"name": "Load_filesdata_from_con_to_azsql",
+	"properties": {
+		"activities": [
+			{
+				"name": "get_az_con_sales_files",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_get_sales_file_names",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "get_az_con_sales_files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('get_az_con_sales_files').output.childItems",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "If Condition1",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(last(split(item().name, '.')), 'csv')",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Insert_data_to_sql_table",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "DelimitedTextSource",
+												"storeSettings": {
+													"type": "AzureBlobFSReadSettings",
+													"recursive": true,
+													"enablePartitionDiscovery": false
+												},
+												"formatSettings": {
+													"type": "DelimitedTextReadSettings"
+												}
+											},
+											"sink": {
+												"type": "SqlServerSink",
+												"writeBehavior": "insert",
+												"sqlWriterUseTableLock": false
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"mappings": [
+													{
+														"source": {
+															"name": "ProductKey",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "ProductKey",
+															"type": "Int32",
+															"physicalType": "int"
+														}
+													},
+													{
+														"source": {
+															"name": "OrderDateKey",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "OrderDateKey",
+															"type": "Int32",
+															"physicalType": "int"
+														}
+													},
+													{
+														"source": {
+															"name": "DueDateKey",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "DueDateKey",
+															"type": "Int32",
+															"physicalType": "int"
+														}
+													},
+													{
+														"source": {
+															"name": "ShipDateKey",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "ShipDateKey",
+															"type": "Int32",
+															"physicalType": "int"
+														}
+													},
+													{
+														"source": {
+															"name": "CustomerKey",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "CustomerKey",
+															"type": "Int32",
+															"physicalType": "int"
+														}
+													},
+													{
+														"source": {
+															"name": "PromotionKey",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "PromotionKey",
+															"type": "Int32",
+															"physicalType": "int"
+														}
+													},
+													{
+														"source": {
+															"name": "CurrencyKey",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "CurrencyKey",
+															"type": "Int32",
+															"physicalType": "int"
+														}
+													},
+													{
+														"source": {
+															"name": "SalesTerritoryKey",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "SalesTerritoryKey",
+															"type": "Int32",
+															"physicalType": "int"
+														}
+													},
+													{
+														"source": {
+															"name": "SalesOrderNumber",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "SalesOrderNumber",
+															"type": "String",
+															"physicalType": "varchar"
+														}
+													},
+													{
+														"source": {
+															"name": "SalesOrderLineNumber",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "SalesOrderLineNumber",
+															"type": "Int32",
+															"physicalType": "int"
+														}
+													},
+													{
+														"source": {
+															"name": "RevisionNumber",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "RevisionNumber",
+															"type": "Int32",
+															"physicalType": "int"
+														}
+													},
+													{
+														"source": {
+															"name": "OrderQuantity",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "OrderQuantity",
+															"type": "Int32",
+															"physicalType": "int"
+														}
+													},
+													{
+														"source": {
+															"name": "UnitPrice",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "UnitPrice",
+															"type": "Decimal",
+															"physicalType": "decimal",
+															"scale": 4,
+															"precision": 18
+														}
+													},
+													{
+														"source": {
+															"name": "ExtendedAmount",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "ExtendedAmount",
+															"type": "Decimal",
+															"physicalType": "decimal",
+															"scale": 4,
+															"precision": 18
+														}
+													},
+													{
+														"source": {
+															"name": "UnitPriceDiscountPct",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "UnitPriceDiscountPct",
+															"type": "Decimal",
+															"physicalType": "decimal",
+															"scale": 4,
+															"precision": 5
+														}
+													},
+													{
+														"source": {
+															"name": "DiscountAmount",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "DiscountAmount",
+															"type": "Decimal",
+															"physicalType": "decimal",
+															"scale": 4,
+															"precision": 18
+														}
+													},
+													{
+														"source": {
+															"name": "ProductStandardCost",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "ProductStandardCost",
+															"type": "Decimal",
+															"physicalType": "decimal",
+															"scale": 4,
+															"precision": 18
+														}
+													},
+													{
+														"source": {
+															"name": "TotalProductCost",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "TotalProductCost",
+															"type": "Decimal",
+															"physicalType": "decimal",
+															"scale": 4,
+															"precision": 18
+														}
+													},
+													{
+														"source": {
+															"name": "SalesAmount",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "SalesAmount",
+															"type": "Decimal",
+															"physicalType": "decimal",
+															"scale": 4,
+															"precision": 18
+														}
+													},
+													{
+														"source": {
+															"name": "TaxAmt",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "TaxAmt",
+															"type": "Decimal",
+															"physicalType": "decimal",
+															"scale": 4,
+															"precision": 18
+														}
+													},
+													{
+														"source": {
+															"name": "Freight",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "Freight",
+															"type": "Decimal",
+															"physicalType": "decimal",
+															"scale": 4,
+															"precision": 18
+														}
+													},
+													{
+														"source": {
+															"name": "CarrierTrackingNumber",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "CarrierTrackingNumber",
+															"type": "String",
+															"physicalType": "varchar"
+														}
+													},
+													{
+														"source": {
+															"name": "CustomerPONumber",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "CustomerPONumber",
+															"type": "String",
+															"physicalType": "varchar"
+														}
+													},
+													{
+														"source": {
+															"name": "OrderDate",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "OrderDate",
+															"type": "String",
+															"physicalType": "varchar"
+														}
+													},
+													{
+														"source": {
+															"name": "DueDate",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "DueDate",
+															"type": "String",
+															"physicalType": "varchar"
+														}
+													},
+													{
+														"source": {
+															"name": "ShipDate",
+															"type": "String",
+															"physicalType": "String"
+														},
+														"sink": {
+															"name": "ShipDate",
+															"type": "String",
+															"physicalType": "varchar"
+														}
+													}
+												],
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "ds_p_az_sales_files",
+												"type": "DatasetReference",
+												"parameters": {
+													"ds_p_sales_file_name": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "ds_load_sales_data",
+												"type": "DatasetReference"
+											}
+										]
+									},
+									{
+										"name": "Copy data1",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Insert_data_to_sql_table",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "DelimitedTextSource",
+												"storeSettings": {
+													"type": "AzureBlobFSReadSettings",
+													"recursive": true,
+													"enablePartitionDiscovery": false
+												},
+												"formatSettings": {
+													"type": "DelimitedTextReadSettings"
+												}
+											},
+											"sink": {
+												"type": "DelimitedTextSink",
+												"storeSettings": {
+													"type": "AzureBlobFSWriteSettings"
+												},
+												"formatSettings": {
+													"type": "DelimitedTextWriteSettings",
+													"quoteAllText": true,
+													"fileExtension": ".txt"
+												}
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "ds_p_az_sales_files",
+												"type": "DatasetReference",
+												"parameters": {
+													"ds_p_sales_file_name": "@item().name"
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "ds_az_sales_archive",
+												"type": "DatasetReference",
+												"parameters": {
+													"ds_az_sales_arc_folder": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									},
+									{
+										"name": "Delete1",
+										"type": "Delete",
+										"dependsOn": [
+											{
+												"activity": "Copy data1",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"dataset": {
+												"referenceName": "ds_az_del_sales_files",
+												"type": "DatasetReference",
+												"parameters": {
+													"ds_p_az_del_sales_f_name": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											},
+											"enableLogging": false,
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-11-04T09:16:45Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

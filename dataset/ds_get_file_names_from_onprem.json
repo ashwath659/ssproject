@@ -1,0 +1,22 @@
+{
+	"name": "ds_get_file_names_from_onprem",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_get_files_from_onprem_path",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,107 @@
+{
+	"name": "dimensiondata_load_fromsql_azure_container",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.tablename_salesprj",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "load_from_sql_container",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT * FROM ', item())",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_conntct_onprem_sql",
+									"type": "DatasetReference",
+									"parameters": {
+										"param_tbname": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_load_dimfiles_bronzecontainer",
+									"type": "DatasetReference",
+									"parameters": {
+										"par_for_get_filename": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"tablename_salesprj": {
+				"type": "array",
+				"defaultValue": [
+					"Sales.Customer",
+					"Sales.SalesPerson",
+					"Sales.SalesTerritory",
+					"Sales.Store"
+				]
+			}
+		},
+		"folder": {
+			"name": "salesprj"
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-11-17T13:56:29Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,157 @@
+{
+	"name": "ds_load_sales_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_az_sql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ProductKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "OrderDateKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DueDateKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ShipDateKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CustomerKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "PromotionKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CurrencyKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SalesTerritoryKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SalesOrderNumber",
+				"type": "varchar"
+			},
+			{
+				"name": "SalesOrderLineNumber",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "RevisionNumber",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "OrderQuantity",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "UnitPrice",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "ExtendedAmount",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "UnitPriceDiscountPct",
+				"type": "decimal",
+				"precision": 5,
+				"scale": 4
+			},
+			{
+				"name": "DiscountAmount",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "ProductStandardCost",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "TotalProductCost",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "SalesAmount",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "TaxAmt",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "Freight",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			},
+			{
+				"name": "CarrierTrackingNumber",
+				"type": "varchar"
+			},
+			{
+				"name": "CustomerPONumber",
+				"type": "varchar"
+			},
+			{
+				"name": "OrderDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DueDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ShipDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "SalesOrders"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

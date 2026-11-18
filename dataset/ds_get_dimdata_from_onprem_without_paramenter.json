@@ -1,0 +1,22 @@
+{
+	"name": "ds_get_dimdata_from_onprem_without_paramenter",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_get_dimensiondata_from_onprem",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
