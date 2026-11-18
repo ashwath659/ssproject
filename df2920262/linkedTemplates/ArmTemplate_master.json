@@ -1,0 +1,334 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "df2920262"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
+		},
+		"DEL_LINKEDSERVICE_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'DEL_LINKEDSERVICE'"
+		},
+		"DEL_LOADFILES TO STORAGE ACCOUNT_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'DEL_LOADFILES TO STORAGE ACCOUNT'"
+		},
+		"ls_archive_folder_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_archive_folder'"
+		},
+		"ls_az_cont_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_az_cont'"
+		},
+		"ls_az_container_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_az_container'"
+		},
+		"ls_az_sql_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_az_sql'"
+		},
+		"ls_for_container_salesprj_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_for_container_salesprj'"
+		},
+		"ls_for_onprem_sql_connect_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_for_onprem_sql_connect'"
+		},
+		"ls_get_dimensiondata_from_onprem_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_get_dimensiondata_from_onprem'"
+		},
+		"ls_get_files_from_onprem_path_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_get_files_from_onprem_path'"
+		},
+		"lsforsqlserverconnect_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'lsforsqlserverconnect'"
+		},
+		"lstostoredataintocontainer_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'lstostoredataintocontainer'"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sa2920262.dfs.core.windows.net/"
+		},
+		"DEL_LINKEDSERVICE_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "E:\\Sales_by_Year"
+		},
+		"DEL_LINKEDSERVICE_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "desktop-7d8btpt\\lenovo"
+		},
+		"DEL_LOADFILES TO STORAGE ACCOUNT_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sa2920262.dfs.core.windows.net/"
+		},
+		"ls_archive_folder_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "E:\\Sales_Archive"
+		},
+		"ls_archive_folder_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "DESKTOP-7D8BTPT\\Lenovo"
+		},
+		"ls_az_cont_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sa2920262.dfs.core.windows.net/"
+		},
+		"ls_az_container_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sa2920262.dfs.core.windows.net/"
+		},
+		"ls_az_sql_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sscompany.database.windows.net"
+		},
+		"ls_az_sql_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sscom"
+		},
+		"ls_az_sql_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ss"
+		},
+		"ls_for_container_salesprj_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://saforsalesprj.dfs.core.windows.net/"
+		},
+		"ls_for_onprem_sql_connect_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "DESKTOP-7D8BTPT"
+		},
+		"ls_for_onprem_sql_connect_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "AdventureWorks2019OLTP"
+		},
+		"ls_for_onprem_sql_connect_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ss"
+		},
+		"ls_get_dimensiondata_from_onprem_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": " D:\\Project\\Dimension"
+		},
+		"ls_get_dimensiondata_from_onprem_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "DESKTOP-7D8BTPT\\Lenovo"
+		},
+		"ls_get_files_from_onprem_path_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "E:\\Sales_by_Year"
+		},
+		"ls_get_files_from_onprem_path_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "DESKTOP-7D8BTPT\\Lenovo"
+		},
+		"lsforsqlserverconnect_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "DESKTOP-7D8BTPT"
+		},
+		"lsforsqlserverconnect_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "AdventureWorksDW2014"
+		},
+		"lsforsqlserverconnect_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ss"
+		},
+		"lstostoredataintocontainer_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sa2920262.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "df2920262_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureDataLakeStorage1_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					},
+					"DEL_LOADFILES TO STORAGE ACCOUNT_accountKey": {
+						"value": "[parameters('DEL_LOADFILES TO STORAGE ACCOUNT_accountKey')]"
+					},
+					"ls_az_cont_accountKey": {
+						"value": "[parameters('ls_az_cont_accountKey')]"
+					},
+					"ls_az_container_accountKey": {
+						"value": "[parameters('ls_az_container_accountKey')]"
+					},
+					"ls_az_sql_password": {
+						"value": "[parameters('ls_az_sql_password')]"
+					},
+					"ls_for_container_salesprj_accountKey": {
+						"value": "[parameters('ls_for_container_salesprj_accountKey')]"
+					},
+					"lstostoredataintocontainer_accountKey": {
+						"value": "[parameters('lstostoredataintocontainer_accountKey')]"
+					},
+					"AzureDataLakeStorage1_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
+					},
+					"DEL_LOADFILES TO STORAGE ACCOUNT_properties_typeProperties_url": {
+						"value": "[parameters('DEL_LOADFILES TO STORAGE ACCOUNT_properties_typeProperties_url')]"
+					},
+					"ls_az_cont_properties_typeProperties_url": {
+						"value": "[parameters('ls_az_cont_properties_typeProperties_url')]"
+					},
+					"ls_az_container_properties_typeProperties_url": {
+						"value": "[parameters('ls_az_container_properties_typeProperties_url')]"
+					},
+					"ls_az_sql_properties_typeProperties_server": {
+						"value": "[parameters('ls_az_sql_properties_typeProperties_server')]"
+					},
+					"ls_az_sql_properties_typeProperties_database": {
+						"value": "[parameters('ls_az_sql_properties_typeProperties_database')]"
+					},
+					"ls_az_sql_properties_typeProperties_userName": {
+						"value": "[parameters('ls_az_sql_properties_typeProperties_userName')]"
+					},
+					"ls_for_container_salesprj_properties_typeProperties_url": {
+						"value": "[parameters('ls_for_container_salesprj_properties_typeProperties_url')]"
+					},
+					"lstostoredataintocontainer_properties_typeProperties_url": {
+						"value": "[parameters('lstostoredataintocontainer_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "df2920262_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"DEL_LINKEDSERVICE_password": {
+						"value": "[parameters('DEL_LINKEDSERVICE_password')]"
+					},
+					"ls_archive_folder_password": {
+						"value": "[parameters('ls_archive_folder_password')]"
+					},
+					"ls_for_onprem_sql_connect_password": {
+						"value": "[parameters('ls_for_onprem_sql_connect_password')]"
+					},
+					"ls_get_dimensiondata_from_onprem_password": {
+						"value": "[parameters('ls_get_dimensiondata_from_onprem_password')]"
+					},
+					"ls_get_files_from_onprem_path_password": {
+						"value": "[parameters('ls_get_files_from_onprem_path_password')]"
+					},
+					"lsforsqlserverconnect_password": {
+						"value": "[parameters('lsforsqlserverconnect_password')]"
+					},
+					"DEL_LINKEDSERVICE_properties_typeProperties_host": {
+						"value": "[parameters('DEL_LINKEDSERVICE_properties_typeProperties_host')]"
+					},
+					"DEL_LINKEDSERVICE_properties_typeProperties_userId": {
+						"value": "[parameters('DEL_LINKEDSERVICE_properties_typeProperties_userId')]"
+					},
+					"ls_archive_folder_properties_typeProperties_host": {
+						"value": "[parameters('ls_archive_folder_properties_typeProperties_host')]"
+					},
+					"ls_archive_folder_properties_typeProperties_userId": {
+						"value": "[parameters('ls_archive_folder_properties_typeProperties_userId')]"
+					},
+					"ls_for_onprem_sql_connect_properties_typeProperties_server": {
+						"value": "[parameters('ls_for_onprem_sql_connect_properties_typeProperties_server')]"
+					},
+					"ls_for_onprem_sql_connect_properties_typeProperties_database": {
+						"value": "[parameters('ls_for_onprem_sql_connect_properties_typeProperties_database')]"
+					},
+					"ls_for_onprem_sql_connect_properties_typeProperties_userName": {
+						"value": "[parameters('ls_for_onprem_sql_connect_properties_typeProperties_userName')]"
+					},
+					"ls_get_dimensiondata_from_onprem_properties_typeProperties_host": {
+						"value": "[parameters('ls_get_dimensiondata_from_onprem_properties_typeProperties_host')]"
+					},
+					"ls_get_dimensiondata_from_onprem_properties_typeProperties_userId": {
+						"value": "[parameters('ls_get_dimensiondata_from_onprem_properties_typeProperties_userId')]"
+					},
+					"ls_get_files_from_onprem_path_properties_typeProperties_host": {
+						"value": "[parameters('ls_get_files_from_onprem_path_properties_typeProperties_host')]"
+					},
+					"ls_get_files_from_onprem_path_properties_typeProperties_userId": {
+						"value": "[parameters('ls_get_files_from_onprem_path_properties_typeProperties_userId')]"
+					},
+					"lsforsqlserverconnect_properties_typeProperties_server": {
+						"value": "[parameters('lsforsqlserverconnect_properties_typeProperties_server')]"
+					},
+					"lsforsqlserverconnect_properties_typeProperties_database": {
+						"value": "[parameters('lsforsqlserverconnect_properties_typeProperties_database')]"
+					},
+					"lsforsqlserverconnect_properties_typeProperties_userName": {
+						"value": "[parameters('lsforsqlserverconnect_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'df2920262_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "df2920262_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'df2920262_ArmTemplate_1')]"
+			]
+		}
+	]
+}

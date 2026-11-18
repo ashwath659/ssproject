@@ -1,0 +1,123 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "df2920262"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"DEL_LINKEDSERVICE_password": {
+			"value": ""
+		},
+		"DEL_LOADFILES TO STORAGE ACCOUNT_accountKey": {
+			"value": ""
+		},
+		"ls_archive_folder_password": {
+			"value": ""
+		},
+		"ls_az_cont_accountKey": {
+			"value": ""
+		},
+		"ls_az_container_accountKey": {
+			"value": ""
+		},
+		"ls_az_sql_password": {
+			"value": ""
+		},
+		"ls_for_container_salesprj_accountKey": {
+			"value": ""
+		},
+		"ls_for_onprem_sql_connect_password": {
+			"value": ""
+		},
+		"ls_get_dimensiondata_from_onprem_password": {
+			"value": ""
+		},
+		"ls_get_files_from_onprem_path_password": {
+			"value": ""
+		},
+		"lsforsqlserverconnect_password": {
+			"value": ""
+		},
+		"lstostoredataintocontainer_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://sa2920262.dfs.core.windows.net/"
+		},
+		"DEL_LINKEDSERVICE_properties_typeProperties_host": {
+			"value": "E:\\Sales_by_Year"
+		},
+		"DEL_LINKEDSERVICE_properties_typeProperties_userId": {
+			"value": "desktop-7d8btpt\\lenovo"
+		},
+		"DEL_LOADFILES TO STORAGE ACCOUNT_properties_typeProperties_url": {
+			"value": "https://sa2920262.dfs.core.windows.net/"
+		},
+		"ls_archive_folder_properties_typeProperties_host": {
+			"value": "E:\\Sales_Archive"
+		},
+		"ls_archive_folder_properties_typeProperties_userId": {
+			"value": "DESKTOP-7D8BTPT\\Lenovo"
+		},
+		"ls_az_cont_properties_typeProperties_url": {
+			"value": "https://sa2920262.dfs.core.windows.net/"
+		},
+		"ls_az_container_properties_typeProperties_url": {
+			"value": "https://sa2920262.dfs.core.windows.net/"
+		},
+		"ls_az_sql_properties_typeProperties_server": {
+			"value": "sscompany.database.windows.net"
+		},
+		"ls_az_sql_properties_typeProperties_database": {
+			"value": "sscom"
+		},
+		"ls_az_sql_properties_typeProperties_userName": {
+			"value": "ss"
+		},
+		"ls_for_container_salesprj_properties_typeProperties_url": {
+			"value": "https://saforsalesprj.dfs.core.windows.net/"
+		},
+		"ls_for_onprem_sql_connect_properties_typeProperties_server": {
+			"value": "DESKTOP-7D8BTPT"
+		},
+		"ls_for_onprem_sql_connect_properties_typeProperties_database": {
+			"value": "AdventureWorks2019OLTP"
+		},
+		"ls_for_onprem_sql_connect_properties_typeProperties_userName": {
+			"value": "ss"
+		},
+		"ls_get_dimensiondata_from_onprem_properties_typeProperties_host": {
+			"value": " D:\\Project\\Dimension"
+		},
+		"ls_get_dimensiondata_from_onprem_properties_typeProperties_userId": {
+			"value": "DESKTOP-7D8BTPT\\Lenovo"
+		},
+		"ls_get_files_from_onprem_path_properties_typeProperties_host": {
+			"value": "E:\\Sales_by_Year"
+		},
+		"ls_get_files_from_onprem_path_properties_typeProperties_userId": {
+			"value": "DESKTOP-7D8BTPT\\Lenovo"
+		},
+		"lsforsqlserverconnect_properties_typeProperties_server": {
+			"value": "DESKTOP-7D8BTPT"
+		},
+		"lsforsqlserverconnect_properties_typeProperties_database": {
+			"value": "AdventureWorksDW2014"
+		},
+		"lsforsqlserverconnect_properties_typeProperties_userName": {
+			"value": "ss"
+		},
+		"lstostoredataintocontainer_properties_typeProperties_url": {
+			"value": "https://sa2920262.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
