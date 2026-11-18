@@ -19,7 +19,9 @@
 						"referenceName": "ds_sales_files_az_container",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"childItems"
+					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"enablePartitionDiscovery": false
@@ -66,7 +68,6 @@
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
 										"recursive": true,
-										"wildcardFileName": "*.csv",
 										"enablePartitionDiscovery": false
 									},
 									"formatSettings": {
@@ -91,8 +92,14 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "ds_sales_files_az_container",
-									"type": "DatasetReference"
+									"referenceName": "ds_p_sales_az_file_names",
+									"type": "DatasetReference",
+									"parameters": {
+										"ds_p_file_name": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
