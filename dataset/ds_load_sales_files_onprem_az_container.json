@@ -1,0 +1,21 @@
+{
+	"name": "ds_load_sales_files_onprem_az_container",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sales_onprem",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
