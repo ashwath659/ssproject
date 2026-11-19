@@ -167,6 +167,9 @@
 		"ls_az_sql_server_connect_properties_typeProperties_userName": {
 			"value": "ss"
 		},
+		"sasswmloadsalesdata_properties_typeProperties_scope": {
+			"value": "/subscriptions/5d602198-21fb-44ea-8972-5e08d22ebe0a/resourceGroups/rg2920262/providers/Microsoft.Storage/storageAccounts/sasswm"
+		},
 		"containerUri": {
 			"value": ""
 		},

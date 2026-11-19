@@ -6,6 +6,10 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "df2920262"
+		},
+		"sasswmloadsalesdata_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/5d602198-21fb-44ea-8972-5e08d22ebe0a/resourceGroups/rg2920262/providers/Microsoft.Storage/storageAccounts/sasswm"
 		}
 	},
 	"variables": {
@@ -1187,6 +1191,37 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/load_sales_data_incremental')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sasswmloadsalesdata')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Load_sales_data_to_fact",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/bronze/blobs/sales",
+					"blobPathEndsWith": ".csv",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('sasswmloadsalesdata_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Load_sales_data_to_fact')]"
 			]
 		}
 	]

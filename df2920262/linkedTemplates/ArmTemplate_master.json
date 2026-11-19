@@ -223,6 +223,10 @@
 			"type": "string",
 			"defaultValue": "ss"
 		},
+		"sasswmloadsalesdata_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/5d602198-21fb-44ea-8972-5e08d22ebe0a/resourceGroups/rg2920262/providers/Microsoft.Storage/storageAccounts/sasswm"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -469,6 +473,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"sasswmloadsalesdata_properties_typeProperties_scope": {
+						"value": "[parameters('sasswmloadsalesdata_properties_typeProperties_scope')]"
 					}
 				}
 			},
