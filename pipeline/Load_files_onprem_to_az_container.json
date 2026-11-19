@@ -62,7 +62,7 @@
 				]
 			},
 			{
-				"name": "Copy data1",
+				"name": "copy_dim_files_to_az",
 				"type": "Copy",
 				"dependsOn": [
 					{
