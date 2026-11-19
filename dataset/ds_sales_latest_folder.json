@@ -1,0 +1,20 @@
+{
+	"name": "ds_sales_latest_folder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sink_path_dim_az",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "sql",
+				"fileSystem": "bronze"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

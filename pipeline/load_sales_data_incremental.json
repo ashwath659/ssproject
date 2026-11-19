@@ -5,11 +5,15 @@
 			{
 				"name": "load_sales_data",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "lastload",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "latest",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -27,17 +31,40 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "select * from dbo.fact_sales",
+							"value": "SELECT * FROM dbo.fact_sales\nWHERE orderdatekey > '@{activity('lastload').output.firstRow.last_load}'\nand orderdatekey <= '@{activity('latest').output.firstRow.latest_load}'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "ds_az_sql_sales_table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sales_latest_folder",
 						"type": "DatasetReference"
 					}
 				]
@@ -53,10 +80,22 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select last_load from dbo.fact_last_load",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_az_sql_sales_table",
+						"type": "DatasetReference"
+					}
+				}
 			},
 			{
-				"name": "Lookup1",
+				"name": "latest",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -70,6 +109,42 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select max(orderdatekey) as latest_load from dbo.fact_sales",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_az_sql_sales_table",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "update_last_load",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "load_sales_data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "update dbo.fact_last_load\nset last_load = '@{activity('latest').output.firstRow.latest_load}';\n\nSELECT 1 AS DummyOutput;",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
