@@ -1,0 +1,25 @@
+{
+	"name": "sasswmloaddata",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Load_sales_data_to_fact",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/bronze/blobs/sales",
+			"blobPathEndsWith": ".csv",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/5d602198-21fb-44ea-8972-5e08d22ebe0a/resourceGroups/rg2920262/providers/Microsoft.Storage/storageAccounts/sasswm",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
