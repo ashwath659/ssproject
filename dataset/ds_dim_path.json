@@ -5,20 +5,12 @@
 			"referenceName": "ls_sink_path_dim_az",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"ds_p_dim_file_name": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@dataset().ds_p_dim_file_name",
-					"type": "Expression"
-				},
+				"fileName": "Product.csv",
 				"folderPath": "dimension",
 				"fileSystem": "bronze"
 			},
