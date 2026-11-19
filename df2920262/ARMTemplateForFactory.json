@@ -4935,7 +4935,7 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Load_sales_data_to_fact",
+							"referenceName": "load_sales_data_incremental",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -4943,7 +4943,7 @@
 				],
 				"type": "BlobEventsTrigger",
 				"typeProperties": {
-					"blobPathBeginsWith": "/bronze/blobs/sales",
+					"blobPathBeginsWith": "/bronze/blobs/sql",
 					"blobPathEndsWith": ".csv",
 					"ignoreEmptyBlobs": true,
 					"scope": "[parameters('sasswmloadsalesdata_properties_typeProperties_scope')]",
@@ -4953,7 +4953,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Load_sales_data_to_fact')]"
+				"[concat(variables('factoryId'), '/pipelines/load_sales_data_incremental')]"
 			]
 		}
 	]
