@@ -44,6 +44,24 @@
 		"lstostoredataintocontainer_accountKey": {
 			"value": ""
 		},
+		"ls_sales_onprem_password": {
+			"value": ""
+		},
+		"ls_sasswm_accountKey": {
+			"value": ""
+		},
+		"ls_az_sql_con_password": {
+			"value": ""
+		},
+		"ls_dim_onprem_path_password": {
+			"value": ""
+		},
+		"ls_sink_path_dim_az_accountKey": {
+			"value": ""
+		},
+		"ls_az_sql_server_connect_password": {
+			"value": ""
+		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"value": "https://sa2920262.dfs.core.windows.net/"
 		},
@@ -112,6 +130,42 @@
 		},
 		"lstostoredataintocontainer_properties_typeProperties_url": {
 			"value": "https://sa2920262.dfs.core.windows.net/"
+		},
+		"ls_sales_onprem_properties_typeProperties_host": {
+			"value": "D:\\Project\\Sales_by_Year"
+		},
+		"ls_sales_onprem_properties_typeProperties_userId": {
+			"value": "DESKTOP-7D8BTPT\\Lenovo"
+		},
+		"ls_sasswm_properties_typeProperties_url": {
+			"value": "https://sasswm.dfs.core.windows.net/"
+		},
+		"ls_az_sql_con_properties_typeProperties_server": {
+			"value": "sscompany.database.windows.net"
+		},
+		"ls_az_sql_con_properties_typeProperties_database": {
+			"value": "sscom"
+		},
+		"ls_az_sql_con_properties_typeProperties_userName": {
+			"value": "ss"
+		},
+		"ls_dim_onprem_path_properties_typeProperties_host": {
+			"value": "D:\\Project\\Dimension"
+		},
+		"ls_dim_onprem_path_properties_typeProperties_userId": {
+			"value": "DESKTOP-7D8BTPT\\Lenovo"
+		},
+		"ls_sink_path_dim_az_properties_typeProperties_url": {
+			"value": "https://sasswm.dfs.core.windows.net/"
+		},
+		"ls_az_sql_server_connect_properties_typeProperties_server": {
+			"value": "sscompany.database.windows.net"
+		},
+		"ls_az_sql_server_connect_properties_typeProperties_database": {
+			"value": "sscom"
+		},
+		"ls_az_sql_server_connect_properties_typeProperties_userName": {
+			"value": "ss"
 		},
 		"containerUri": {
 			"value": ""

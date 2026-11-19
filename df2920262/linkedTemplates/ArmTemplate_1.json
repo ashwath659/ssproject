@@ -31,6 +31,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'lsforsqlserverconnect'"
 		},
+		"ls_sales_onprem_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_sales_onprem'"
+		},
 		"DEL_LINKEDSERVICE_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "E:\\Sales_by_Year"
@@ -86,12 +90,137 @@
 		"lsforsqlserverconnect_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "ss"
+		},
+		"ls_sales_onprem_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "D:\\Project\\Sales_by_Year"
+		},
+		"ls_sales_onprem_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "DESKTOP-7D8BTPT\\Lenovo"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_az_del_sales_files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_az_cont",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ds_p_az_del_sales_f_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().ds_p_az_del_sales_f_name",
+							"type": "Expression"
+						},
+						"folderPath": "sales",
+						"fileSystem": "bronze"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_az_sales_archive')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_az_container",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ds_az_sales_arc_folder": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().ds_az_sales_arc_folder",
+							"type": "Expression"
+						},
+						"folderPath": "sales/Archive",
+						"fileSystem": "bronze"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_get_sales_file_names')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_az_cont",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "sales",
+						"fileSystem": "bronze"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_getmeta_file_names')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_az_cont",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Sales_OnPrem_Files_Data",
+						"fileSystem": "bronze"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ds_load_dimfiles_bronzecontainer')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -734,886 +863,26 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Load_Files_to_Sales_Folder_Parquet')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/ls_sales_onprem')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "Load Files to Sales Folder Parquet Format",
-				"activities": [
-					{
-						"name": "Get_FileName",
-						"description": "Get all file names in on prem folder",
-						"type": "GetMetadata",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "ds_getmeta_file_names",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "Get_FileName",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get_FileName').output.childItems",
-								"type": "Expression"
-							},
-							"isSequential": false,
-							"batchCount": 5,
-							"activities": [
-								{
-									"name": "If Condition1",
-									"type": "IfCondition",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@equals(last(split(item().name, '.')), 'csv')",
-											"type": "Expression"
-										},
-										"ifTrueActivities": [
-											{
-												"name": "Copy data1",
-												"type": "Copy",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "0.12:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "DelimitedTextSource",
-														"storeSettings": {
-															"type": "AzureBlobFSReadSettings",
-															"recursive": true,
-															"enablePartitionDiscovery": false
-														},
-														"formatSettings": {
-															"type": "DelimitedTextReadSettings"
-														}
-													},
-													"sink": {
-														"type": "ParquetSink",
-														"storeSettings": {
-															"type": "AzureBlobFSWriteSettings",
-															"copyBehavior": "MergeFiles"
-														},
-														"formatSettings": {
-															"type": "ParquetWriteSettings"
-														}
-													},
-													"enableStaging": false,
-													"translator": {
-														"type": "TabularTranslator",
-														"typeConversion": true,
-														"typeConversionSettings": {
-															"allowDataTruncation": true,
-															"treatBooleanAsNumber": false
-														}
-													}
-												},
-												"inputs": [
-													{
-														"referenceName": "ds_p_file_name",
-														"type": "DatasetReference",
-														"parameters": {
-															"ds_p_file_name": {
-																"value": "@item().name",
-																"type": "Expression"
-															}
-														}
-													}
-												],
-												"outputs": [
-													{
-														"referenceName": "sink_load_sales_files_parquet",
-														"type": "DatasetReference",
-														"parameters": {}
-													}
-												]
-											}
-										]
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Copy data2",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings",
-									"copyBehavior": "MergeFiles"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DelimitedText5",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Parquet1",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Project"
-				},
 				"annotations": [],
-				"lastPublishTime": "2026-11-12T12:27:48Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_p_file_name')]",
-				"[concat(variables('factoryId'), '/datasets/sink_load_sales_files_parquet')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Load_filesdata_from_con_to_azsql')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "get_az_con_sales_files",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "ds_get_sales_file_names",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "get_az_con_sales_files",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('get_az_con_sales_files').output.childItems",
-								"type": "Expression"
-							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "If Condition1",
-									"type": "IfCondition",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@equals(last(split(item().name, '.')), 'csv')",
-											"type": "Expression"
-										},
-										"ifTrueActivities": [
-											{
-												"name": "Insert_data_to_sql_table",
-												"type": "Copy",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "0.12:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "DelimitedTextSource",
-														"storeSettings": {
-															"type": "AzureBlobFSReadSettings",
-															"recursive": true,
-															"enablePartitionDiscovery": false
-														},
-														"formatSettings": {
-															"type": "DelimitedTextReadSettings"
-														}
-													},
-													"sink": {
-														"type": "SqlServerSink",
-														"writeBehavior": "insert",
-														"sqlWriterUseTableLock": false
-													},
-													"enableStaging": false,
-													"translator": {
-														"type": "TabularTranslator",
-														"mappings": [
-															{
-																"source": {
-																	"name": "ProductKey",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "ProductKey",
-																	"type": "Int32",
-																	"physicalType": "int"
-																}
-															},
-															{
-																"source": {
-																	"name": "OrderDateKey",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "OrderDateKey",
-																	"type": "Int32",
-																	"physicalType": "int"
-																}
-															},
-															{
-																"source": {
-																	"name": "DueDateKey",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "DueDateKey",
-																	"type": "Int32",
-																	"physicalType": "int"
-																}
-															},
-															{
-																"source": {
-																	"name": "ShipDateKey",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "ShipDateKey",
-																	"type": "Int32",
-																	"physicalType": "int"
-																}
-															},
-															{
-																"source": {
-																	"name": "CustomerKey",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "CustomerKey",
-																	"type": "Int32",
-																	"physicalType": "int"
-																}
-															},
-															{
-																"source": {
-																	"name": "PromotionKey",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "PromotionKey",
-																	"type": "Int32",
-																	"physicalType": "int"
-																}
-															},
-															{
-																"source": {
-																	"name": "CurrencyKey",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "CurrencyKey",
-																	"type": "Int32",
-																	"physicalType": "int"
-																}
-															},
-															{
-																"source": {
-																	"name": "SalesTerritoryKey",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "SalesTerritoryKey",
-																	"type": "Int32",
-																	"physicalType": "int"
-																}
-															},
-															{
-																"source": {
-																	"name": "SalesOrderNumber",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "SalesOrderNumber",
-																	"type": "String",
-																	"physicalType": "varchar"
-																}
-															},
-															{
-																"source": {
-																	"name": "SalesOrderLineNumber",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "SalesOrderLineNumber",
-																	"type": "Int32",
-																	"physicalType": "int"
-																}
-															},
-															{
-																"source": {
-																	"name": "RevisionNumber",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "RevisionNumber",
-																	"type": "Int32",
-																	"physicalType": "int"
-																}
-															},
-															{
-																"source": {
-																	"name": "OrderQuantity",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "OrderQuantity",
-																	"type": "Int32",
-																	"physicalType": "int"
-																}
-															},
-															{
-																"source": {
-																	"name": "UnitPrice",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "UnitPrice",
-																	"type": "Decimal",
-																	"physicalType": "decimal",
-																	"scale": 4,
-																	"precision": 18
-																}
-															},
-															{
-																"source": {
-																	"name": "ExtendedAmount",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "ExtendedAmount",
-																	"type": "Decimal",
-																	"physicalType": "decimal",
-																	"scale": 4,
-																	"precision": 18
-																}
-															},
-															{
-																"source": {
-																	"name": "UnitPriceDiscountPct",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "UnitPriceDiscountPct",
-																	"type": "Decimal",
-																	"physicalType": "decimal",
-																	"scale": 4,
-																	"precision": 5
-																}
-															},
-															{
-																"source": {
-																	"name": "DiscountAmount",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "DiscountAmount",
-																	"type": "Decimal",
-																	"physicalType": "decimal",
-																	"scale": 4,
-																	"precision": 18
-																}
-															},
-															{
-																"source": {
-																	"name": "ProductStandardCost",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "ProductStandardCost",
-																	"type": "Decimal",
-																	"physicalType": "decimal",
-																	"scale": 4,
-																	"precision": 18
-																}
-															},
-															{
-																"source": {
-																	"name": "TotalProductCost",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "TotalProductCost",
-																	"type": "Decimal",
-																	"physicalType": "decimal",
-																	"scale": 4,
-																	"precision": 18
-																}
-															},
-															{
-																"source": {
-																	"name": "SalesAmount",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "SalesAmount",
-																	"type": "Decimal",
-																	"physicalType": "decimal",
-																	"scale": 4,
-																	"precision": 18
-																}
-															},
-															{
-																"source": {
-																	"name": "TaxAmt",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "TaxAmt",
-																	"type": "Decimal",
-																	"physicalType": "decimal",
-																	"scale": 4,
-																	"precision": 18
-																}
-															},
-															{
-																"source": {
-																	"name": "Freight",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "Freight",
-																	"type": "Decimal",
-																	"physicalType": "decimal",
-																	"scale": 4,
-																	"precision": 18
-																}
-															},
-															{
-																"source": {
-																	"name": "CarrierTrackingNumber",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "CarrierTrackingNumber",
-																	"type": "String",
-																	"physicalType": "varchar"
-																}
-															},
-															{
-																"source": {
-																	"name": "CustomerPONumber",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "CustomerPONumber",
-																	"type": "String",
-																	"physicalType": "varchar"
-																}
-															},
-															{
-																"source": {
-																	"name": "OrderDate",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "OrderDate",
-																	"type": "String",
-																	"physicalType": "varchar"
-																}
-															},
-															{
-																"source": {
-																	"name": "DueDate",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "DueDate",
-																	"type": "String",
-																	"physicalType": "varchar"
-																}
-															},
-															{
-																"source": {
-																	"name": "ShipDate",
-																	"type": "String",
-																	"physicalType": "String"
-																},
-																"sink": {
-																	"name": "ShipDate",
-																	"type": "String",
-																	"physicalType": "varchar"
-																}
-															}
-														],
-														"typeConversion": true,
-														"typeConversionSettings": {
-															"allowDataTruncation": true,
-															"treatBooleanAsNumber": false
-														}
-													}
-												},
-												"inputs": [
-													{
-														"referenceName": "ds_p_az_sales_files",
-														"type": "DatasetReference",
-														"parameters": {
-															"ds_p_sales_file_name": {
-																"value": "@item().name",
-																"type": "Expression"
-															}
-														}
-													}
-												],
-												"outputs": [
-													{
-														"referenceName": "ds_load_sales_data",
-														"type": "DatasetReference",
-														"parameters": {}
-													}
-												]
-											},
-											{
-												"name": "Copy data1",
-												"type": "Copy",
-												"dependsOn": [
-													{
-														"activity": "Insert_data_to_sql_table",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "0.12:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "DelimitedTextSource",
-														"storeSettings": {
-															"type": "AzureBlobFSReadSettings",
-															"recursive": true,
-															"enablePartitionDiscovery": false
-														},
-														"formatSettings": {
-															"type": "DelimitedTextReadSettings"
-														}
-													},
-													"sink": {
-														"type": "DelimitedTextSink",
-														"storeSettings": {
-															"type": "AzureBlobFSWriteSettings"
-														},
-														"formatSettings": {
-															"type": "DelimitedTextWriteSettings",
-															"quoteAllText": true,
-															"fileExtension": ".txt"
-														}
-													},
-													"enableStaging": false,
-													"translator": {
-														"type": "TabularTranslator",
-														"typeConversion": true,
-														"typeConversionSettings": {
-															"allowDataTruncation": true,
-															"treatBooleanAsNumber": false
-														}
-													}
-												},
-												"inputs": [
-													{
-														"referenceName": "ds_p_az_sales_files",
-														"type": "DatasetReference",
-														"parameters": {
-															"ds_p_sales_file_name": "@item().name"
-														}
-													}
-												],
-												"outputs": [
-													{
-														"referenceName": "ds_az_sales_archive",
-														"type": "DatasetReference",
-														"parameters": {
-															"ds_az_sales_arc_folder": {
-																"value": "@item().name",
-																"type": "Expression"
-															}
-														}
-													}
-												]
-											},
-											{
-												"name": "Delete1",
-												"type": "Delete",
-												"dependsOn": [
-													{
-														"activity": "Copy data1",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "0.12:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"dataset": {
-														"referenceName": "ds_az_del_sales_files",
-														"type": "DatasetReference",
-														"parameters": {
-															"ds_p_az_del_sales_f_name": {
-																"value": "@item().name",
-																"type": "Expression"
-															}
-														}
-													},
-													"enableLogging": false,
-													"storeSettings": {
-														"type": "AzureBlobFSReadSettings",
-														"recursive": true,
-														"enablePartitionDiscovery": false
-													}
-												}
-											}
-										]
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2026-11-04T09:16:45Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_p_az_sales_files')]",
-				"[concat(variables('factoryId'), '/datasets/ds_load_sales_data')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_archive_onprem_sales')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_archive_folder",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
+				"type": "FileServer",
 				"typeProperties": {
-					"location": {
-						"type": "FileServerLocation"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": false,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_archive_folder')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_conntct_onprem_sql')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_for_onprem_sql_connect",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"param_tbname": {
-						"type": "string"
+					"host": "[parameters('ls_sales_onprem_properties_typeProperties_host')]",
+					"userId": "[parameters('ls_sales_onprem_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_sales_onprem_password')]"
 					}
 				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {}
+				"connectVia": {
+					"referenceName": "irforss",
+					"type": "IntegrationRuntimeReference"
+				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_for_onprem_sql_connect')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_get_dimdata_from_onprem_without_paramenter')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_get_dimensiondata_from_onprem",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "FileServerLocation"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_get_dimensiondata_from_onprem')]"
-			]
+			"dependsOn": []
 		}
 	]
 }

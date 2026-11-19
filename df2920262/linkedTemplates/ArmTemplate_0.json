@@ -35,6 +35,22 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'lstostoredataintocontainer'"
 		},
+		"ls_sasswm_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_sasswm'"
+		},
+		"ls_az_sql_con_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_az_sql_con'"
+		},
+		"ls_sink_path_dim_az_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_sink_path_dim_az'"
+		},
+		"ls_az_sql_server_connect_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_az_sql_server_connect'"
+		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://sa2920262.dfs.core.windows.net/"
@@ -70,6 +86,38 @@
 		"lstostoredataintocontainer_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://sa2920262.dfs.core.windows.net/"
+		},
+		"ls_sasswm_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sasswm.dfs.core.windows.net/"
+		},
+		"ls_az_sql_con_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sscompany.database.windows.net"
+		},
+		"ls_az_sql_con_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sscom"
+		},
+		"ls_az_sql_con_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ss"
+		},
+		"ls_sink_path_dim_az_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://sasswm.dfs.core.windows.net/"
+		},
+		"ls_az_sql_server_connect_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sscompany.database.windows.net"
+		},
+		"ls_az_sql_server_connect_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sscom"
+		},
+		"ls_az_sql_server_connect_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "ss"
 		}
 	},
 	"variables": {
@@ -208,6 +256,84 @@
 			"properties": {
 				"type": "SelfHosted",
 				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_sasswm')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ls_sasswm_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ls_sasswm_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_az_sql_con')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('ls_az_sql_con_properties_typeProperties_server')]",
+					"database": "[parameters('ls_az_sql_con_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_az_sql_con_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_az_sql_con_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_sink_path_dim_az')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ls_sink_path_dim_az_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ls_sink_path_dim_az_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_az_sql_server_connect')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('ls_az_sql_server_connect_properties_typeProperties_server')]",
+					"database": "[parameters('ls_az_sql_server_connect_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_az_sql_server_connect_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_az_sql_server_connect_password')]"
+					}
+				}
 			},
 			"dependsOn": []
 		},
@@ -738,131 +864,6 @@
 						"fileSystem": "silver"
 					},
 					"compressionCodec": "snappy"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_az_cont')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_az_del_sales_files')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_az_cont",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"ds_p_az_del_sales_f_name": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().ds_p_az_del_sales_f_name",
-							"type": "Expression"
-						},
-						"folderPath": "sales",
-						"fileSystem": "bronze"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_az_cont')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_az_sales_archive')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_az_container",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"ds_az_sales_arc_folder": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().ds_az_sales_arc_folder",
-							"type": "Expression"
-						},
-						"folderPath": "sales/Archive",
-						"fileSystem": "bronze"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": false,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_az_container')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_get_sales_file_names')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_az_cont",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "sales",
-						"fileSystem": "bronze"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_az_cont')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_getmeta_file_names')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_az_cont",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "Sales_OnPrem_Files_Data",
-						"fileSystem": "bronze"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": false,
-					"quoteChar": "\""
 				},
 				"schema": []
 			},
